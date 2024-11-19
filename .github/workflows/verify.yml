@@ -16,16 +16,16 @@ jobs:
         id: action
         uses: ./action
         with:
-          branch-name: feature/test-name
+          text: feature/test-name
 
       - name: "Verify action result"
         id: verify_result
         run: |
-          if [[ -n ${{ steps.action.outputs.branch-name }} && ${{ steps.action.outputs.branch-name }} == *"/"* ]]; then
-            echo "Branch name parsing failed. Branch name: ${{ steps.action.outputs.branch-name }}"
+          if [[ -n ${{ steps.action.outputs.text }} && ${{ steps.action.outputs.text }} == *"/"* ]]; then
+            echo "Branch name parsing failed. Branch name: ${{ steps.action.outputs.text }}"
             exit 1
           else
-            echo "Branch name was parsed successfully. Branch name: ${{ steps.action.outputs.branch-name }}"
+            echo "Branch name was parsed successfully. Branch name: ${{ steps.action.outputs.text }}"
           fi
 
       - name: Report Status Check
