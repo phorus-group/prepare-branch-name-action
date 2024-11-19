@@ -21,7 +21,7 @@ jobs:
       - name: "Verify action result"
         id: verify_result
         run: |
-          if [[ -n ${{ steps.action.outputs.text }} && ${{ steps.action.outputs.text }} == *"/"* ]]; then
+          if [[ -n "${{ steps.action.outputs.text }}" && "${{ steps.action.outputs.text }}" == *"/"* ]]; then
             echo "Branch name parsing failed. Branch name: ${{ steps.action.outputs.text }}"
             exit 1
           else
