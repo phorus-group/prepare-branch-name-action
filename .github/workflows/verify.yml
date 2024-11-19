@@ -1,0 +1,46 @@
+name: Verify Action
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  self_check:
+    name: Run this Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Clone action"
+        uses: actions/checkout@v4
+
+      - name: "Call action"
+        id: action
+        uses: ./
+        with:
+          text: feature/test-name
+
+      - name: "Verify action result"
+        id: verify_result
+        run: |
+          if [[ "${{ steps.action.outputs.text }}" == "" || "${{ steps.action.outputs.text }}" == *"/"* ]]; then
+            echo "Branch name parsing failed. Branch name: ${{ steps.action.outputs.text }}"
+            exit 1
+          else
+            echo "Branch name was parsed successfully. Branch name: ${{ steps.action.outputs.text }}"
+          fi
+
+      - name: Report Status Check
+        uses: phorus-group/workflow-status-check-action@main
+        with:
+          STATE: ${{ steps.verify_result.outcome }}
+
+  enforce-all-checks:
+    name: Enforce all checks
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+    steps:
+      - name: Enforce all checks
+        uses: poseidon/wait-for-status-checks@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ignore: Enforce all checks

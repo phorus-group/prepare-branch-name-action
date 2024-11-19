@@ -1,0 +1,26 @@
+name: Unslash text
+description: An action to remove slashes from text, useful to prepare a branch name to be used for actions like actions/upload-artifact. This action parses the text and replaces any slashes
+
+inputs:
+  text:
+    description: The text to unslash
+    required: true
+  replacement:
+    description: The replacement
+    required: false
+    default: "_"
+outputs:
+  text:
+    description: "The processed text"
+    value: ${{ steps.process_text.outputs.text }}
+
+runs:
+  using: composite
+  steps:
+    - name: "Process text"
+      id: process_text
+      run: |
+        REPLACED_TEXT=$(echo "${{ inputs.text }}" | sed "s/\//\${{ inputs.replacement }}/g")
+        echo "Replaced text: $REPLACED_TEXT"
+        echo "text=$REPLACED_TEXT" >> "$GITHUB_OUTPUT"
+      shell: bash
