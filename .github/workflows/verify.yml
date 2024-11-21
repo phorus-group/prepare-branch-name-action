@@ -28,13 +28,9 @@ jobs:
             echo "Branch name was parsed successfully. Branch name: ${{ steps.action.outputs.text }}"
           fi
 
-      - name: Report Status Check
-        uses: phorus-group/workflow-status-check-action@main
-        with:
-          STATE: ${{ steps.verify_result.outcome }}
-
   enforce-all-checks:
     name: Enforce all checks
+    needs: [self_check]
     runs-on: ubuntu-latest
     permissions:
       checks: read
